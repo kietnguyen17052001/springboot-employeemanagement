@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepo repo;
+
     @Override
     public List<Department> getDepartments() {
         return repo.findAll();
@@ -27,8 +29,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    public List<Department> sortDepartmentName(boolean isAsc) {
+        return (isAsc) ? getDepartments().stream().sorted(Comparator.comparing(Department::getName)).collect(Collectors.toList()) :
+                getDepartments().stream().sorted(Comparator.comparing(Department::getName).reversed()).collect(Collectors.toList());
+    }
+
+    @Override
     public Department getDepartment(Long departmentId) {
-        return repo.findById(departmentId).orElseThrow(()->{
+        return repo.findById(departmentId).orElseThrow(() -> {
             log.error("error getting department {}", departmentId);
             return new NotFoundException("Department " + departmentId + " not found");
         });
@@ -46,6 +54,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void deleteDepartment(Long departmentId) {
+        Department department = repo.findById(departmentId).orElseThrow(() ->
+                new NotFoundException("Department " + departmentId + " not found")
+        );
         repo.deleteById(departmentId);
     }
 }

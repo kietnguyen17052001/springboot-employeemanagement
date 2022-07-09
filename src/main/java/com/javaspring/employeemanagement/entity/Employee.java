@@ -14,7 +14,7 @@ public class Employee {
     @Column(nullable = false)
     private String name;
     private float salary;
-    @ManyToOne(targetEntity = Department.class, cascade = CascadeType.PERSIST)
+    @ManyToOne(targetEntity = Department.class)
     @JoinColumn(name = "id_department", nullable = false)
     private Department department;
 }
