@@ -43,7 +43,6 @@ public class DepartmentController {
                 mapper.map(department, DepartmentDto.class)).collect(Collectors.toList());
     }
 
-
     @PostMapping
     public ResponseEntity<DepartmentDto> addDepartment(@RequestBody DepartmentDto departmentDto) {
         Department entity = mapper.map(departmentDto, Department.class);
